@@ -17,7 +17,7 @@ namespace Daylio_Parser.Repo
         
         private string _filePath = string.Empty;
 
-        public static List<string> CSVHeaders = new List<string>()
+        public static HashSet<string> CSVHeaders = new HashSet<string>()
         {
             FULL_DATE_HEADER,
             DATE_HEADER,
