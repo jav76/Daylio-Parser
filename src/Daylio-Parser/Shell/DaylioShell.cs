@@ -11,7 +11,8 @@ namespace Daylio_Parser.Shell
         public static void Init(params string[] args)
         {
             _args = args;
-            _commands = new DaylioShellCommands(_args);
+            _commands = new DaylioShellCommands();
+            _commands.Init();
         }
 
         public static void StartListening()
