@@ -34,7 +34,7 @@ namespace Daylio_Parser.Repo
             _filePath = filePath;
         }
 
-        public IEnumerable<CSVDataModel> TryReadFile()
+        public IEnumerable<CSVDataModel>? TryReadFile()
         {
             List<CSVDataModel> CSVData = new List<CSVDataModel>();
             CsvHelper.Configuration.IReaderConfiguration readerConfig = new CsvHelper.Configuration.CsvConfiguration(CultureInfo.InvariantCulture)
@@ -67,10 +67,12 @@ namespace Daylio_Parser.Repo
             catch (IOException ex)
             {
                 Console.WriteLine(ex.Message);
+                return null;
             }
             catch (InvalidDataException ex)
             {
                 Console.WriteLine(ex.Message);
+                return null;
             }
 
             return CSVData;

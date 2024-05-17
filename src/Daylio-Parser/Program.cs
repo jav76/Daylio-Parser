@@ -12,7 +12,12 @@ namespace Daylio_Parser
             DaylioShell.StartListening();
 
             DaylioFileAccess fileAccess = new DaylioFileAccess(@"C:\Users\jav26\git\Daylio-Parser\daylio_export_2024_05_16.csv");
-            IEnumerable<CSVDataModel> fileData = fileAccess.TryReadFile();
+            IEnumerable<CSVDataModel>? fileData = fileAccess.TryReadFile();
+
+            if (fileData == null)
+            {
+                return;
+            }
 
             foreach (CSVDataModel line in fileData)
             {
