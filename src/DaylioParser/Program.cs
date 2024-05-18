@@ -36,7 +36,7 @@ namespace DaylioParser
                 if (!string.IsNullOrWhiteSpace(input))
                 {
                     string commandName = input.Split(' ')[0];
-                    string[]? commandArgs = input.Substring(commandName.Length).Split(' ');
+                    string[]? commandArgs = input.Substring(commandName.Length).Split(' ').Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
                     Command command = DaylioShell.Commands.Where(command => command.Name == commandName).Distinct().FirstOrDefault();
                     command?.InvokeAsync
                         (

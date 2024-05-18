@@ -1,6 +1,9 @@
-﻿using Daylio_Parser;
+﻿using System;
 using System.Collections;
 using System.CommandLine;
+using System.CommandLine.Invocation;
+using System.CommandLine.NamingConventionBinder;
+using System.Diagnostics.Tracing;
 
 namespace DaylioParser.Shell
 {
@@ -12,6 +15,7 @@ namespace DaylioParser.Shell
 
         public IEnumerable<Command> Commands => _commands;
         public event EventHandler<DaylioShellEventArgs<string>>? GetSummary;
+        public event EventHandler<DaylioShellEventArgs<int, string>>? SetDaylioFilePath;
         public RootCommand? RootCommand => _rootCommand;
 
         public DaylioShellCommands(params string[] args)
@@ -29,12 +33,19 @@ namespace DaylioParser.Shell
         private void BuildSummaryCommand()
         {
             Command summaryCommand = new Command("summary", "Get a summary of Daylio data.");
-            DaylioShellEventArgs<string> eventArgs = new DaylioShellEventArgs<string>();
+            Option fileOption = new Option<string>("--file", "File path of a Daylio CSV file.");
+            fileOption.IsRequired = true;
+            summaryCommand.AddOption(fileOption);
 
-            summaryCommand.SetHandler(() =>
+            DaylioShellEventArgs<string> summaryEventArgs = new DaylioShellEventArgs<string>();
+            DaylioShellEventArgs<int, string> setFileEventArgs;
+
+            summaryCommand.Handler = CommandHandler.Create<string>((file) =>
             {
-                GetSummary?.Invoke(this, eventArgs);
-                Console.WriteLine(eventArgs.Result);
+                setFileEventArgs = new DaylioShellEventArgs<int, string>(new string[] { file });
+                SetDaylioFilePath?.Invoke(this, setFileEventArgs);
+                GetSummary?.Invoke(this, summaryEventArgs);
+                Console.WriteLine(summaryEventArgs.Result);
             });
 
             _rootCommand?.Add(summaryCommand);

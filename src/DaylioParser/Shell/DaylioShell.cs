@@ -1,5 +1,4 @@
-﻿using Daylio_Parser;
-using DaylioParser.Repo;
+﻿using DaylioParser.Repo;
 using System.CommandLine;
 
 namespace DaylioParser.Shell
@@ -11,9 +10,23 @@ namespace DaylioParser.Shell
         private static string[]? _args;
         private static DaylioDataRepo? _dataRepo;
         private static DaylioDataSummary? _dataSummary;
+        private static string _fileLocation = string.Empty;
 
         public static event EventHandler<DaylioShellEventArgs<string>>? GetSummary;
+        public static event EventHandler<DaylioShellEventArgs<int, object>>? SetDaylioFilePath;
+
         public static DaylioShellCommands? Commands => _commands;
+
+        public static string FileLocation
+        {
+            get => _fileLocation;
+            set
+            {
+                _fileLocation = value;
+                _dataRepo = new DaylioDataRepo(new DaylioFileAccess(_fileLocation));
+                _dataSummary = new DaylioDataSummary(_dataRepo);
+            }
+        }
 
         public static void Init(DaylioDataRepo dataRepo, params string[] args)
         {
@@ -33,6 +46,7 @@ namespace DaylioParser.Shell
             }
 
             _commands.GetSummary += GetSummaryHandler;
+            _commands.SetDaylioFilePath += SetDaylioFilePathHandler;
         }
 
         private static void RemoveEventListeners()
@@ -43,6 +57,7 @@ namespace DaylioParser.Shell
             }
 
             _commands.GetSummary -= GetSummaryHandler;
+            _commands.SetDaylioFilePath -= SetDaylioFilePathHandler;
         }
 
         public static void StartListening()
@@ -74,6 +89,26 @@ namespace DaylioParser.Shell
         public static void GetSummaryHandler(object? sender, DaylioShellEventArgs<string> e)
         {
             e.Result = _dataSummary?.GetSummary();
+        }
+
+        public static void SetDaylioFilePathHandler(object? sender, DaylioShellEventArgs<int, string> e)
+        {
+            if (e.Args.Length != 1)
+            {
+                e.Result = -1;
+                return;
+            }
+
+            string? newFileLocation = e.Args[0].ToString();
+
+            if (string.IsNullOrWhiteSpace(newFileLocation))
+            {
+                e.Result = -1;
+                return;
+            }
+
+            FileLocation = newFileLocation;
+            e.Result = 0;
         }
 
         #endregion
