@@ -1,6 +1,6 @@
 ﻿using CsvHelper.Configuration.Attributes;
 
-namespace Daylio_Parser.Models
+namespace DaylioParser.Models
 {
     internal class DaylioCSVDataModel
     {

@@ -1,45 +1,43 @@
-﻿using Daylio_Parser.Models;
+﻿using DaylioParser.Models;
+using DaylioParser.Repo;
 using System.Reflection;
 using System.Text;
 
-namespace Daylio_Parser
+namespace DaylioParser
 {
-    internal static class DaylioDataSummary
+    internal class DaylioDataSummary
     {
 
-        private static IEnumerable<DaylioCSVDataModel>? _CSVData;
-
-        public static IEnumerable<DaylioCSVDataModel>? CSVData => _CSVData;
-
+        private DaylioDataRepo _daylioDataRepo;
 
         [SummaryProperty]
-        public static int? TotalEntries => _CSVData?.Count();
+        public int? TotalEntries => _daylioDataRepo.CSVData?.Count();
 
         [SummaryProperty]
-        public static int? TotalDays => _CSVData?.Select(x => x.FullDate).Distinct().Count();
+        public int? TotalDays => _daylioDataRepo.CSVData?.Select(x => x.FullDate).Distinct().Count();
 
         [SummaryProperty]
-        public static int DistinctActivities => DaylioCommon.Activities.Count();
+        public int DistinctActivitiesCount => _daylioDataRepo.Activities.Count();
 
         [SummaryProperty]
-        public static int TotalActivities => _CSVData?.Sum(x => x.Activities?.Split(' ').Length ?? 0) ?? 0;
+        public int TotalActivitiesCount => _daylioDataRepo.CSVData?.Sum(x => x.Activities?.Split(' ').Length ?? 0) ?? 0;
 
         [SummaryProperty]
-        public static DaylioCSVDataModel? EarliestEntry => _CSVData?.OrderBy(x => x.FullDate).First();
+        public DaylioCSVDataModel? EarliestEntry => _daylioDataRepo.CSVData?.OrderBy(x => x.FullDate).First();
 
         [SummaryProperty]
-        public static DaylioCSVDataModel? LatestEntry => _CSVData?.OrderBy(x => x.FullDate).Last();
+        public DaylioCSVDataModel? LatestEntry => _daylioDataRepo.CSVData?.OrderBy(x => x.FullDate).Last();
 
         [SummaryProperty]
-        public static int NoteTotalWordCount => _CSVData?.Sum(x => x.Note?.Split(' ').Length ?? 0) ?? 0;
+        public int NoteTotalWordCount => _daylioDataRepo.CSVData?.Sum(x => x.Note?.Split(' ').Length ?? 0) ?? 0;
 
 
-        public static void Init(IEnumerable<DaylioCSVDataModel>? daylioData)
+        public DaylioDataSummary(DaylioDataRepo daylioData)
         {
-            _CSVData = daylioData;
+            _daylioDataRepo = daylioData;
         }
 
-        public static string GetSummary()
+        public string GetSummary()
         {
             StringBuilder sb = new StringBuilder();
             IEnumerable<PropertyInfo> properties = typeof(DaylioDataSummary).GetProperties()
@@ -47,7 +45,7 @@ namespace Daylio_Parser
 
             foreach (PropertyInfo property in properties)
             {
-                sb.AppendLine($"{property.Name}: {property.GetValue(null)}");
+                sb.AppendLine($"{property.Name}: {property.GetValue(this)}");
             }
 
             return sb.ToString();

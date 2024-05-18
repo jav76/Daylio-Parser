@@ -1,8 +1,8 @@
-﻿using Daylio_Parser.Models;
-using Daylio_Parser.Repo;
-using Daylio_Parser.Shell;
+﻿using DaylioParser.Models;
+using DaylioParser.Repo;
+using DaylioParser.Shell;
 
-namespace Daylio_Parser
+namespace DaylioParser
 {
     internal class Program
     {
@@ -12,19 +12,20 @@ namespace Daylio_Parser
             DaylioShell.StartListening();
 
             DaylioFileAccess fileAccess = new DaylioFileAccess(@"C:\Users\jav26\git\Daylio-Parser\daylio_export_2024_05_16.csv");
-            IEnumerable<DaylioCSVDataModel>? fileData = fileAccess.TryReadFile();
+            DaylioDataRepo daylioDataRepo = new DaylioDataRepo(fileAccess);
 
-            DaylioDataSummary.Init(fileData);
-            string summary = DaylioDataSummary.GetSummary(); 
+            DaylioDataSummary dataSummary = new DaylioDataSummary(daylioDataRepo);
+            string summary = dataSummary.GetSummary();
 
-            if (fileData == null)
+            if (daylioDataRepo.CSVData == null)
             {
                 return;
             }
 
-            foreach (DaylioCSVDataModel line in fileData)
+            foreach (DaylioCSVDataModel line in daylioDataRepo.CSVData)
             {
                 Console.WriteLine(line.ToString());
+                Console.WriteLine(summary);
             }
         }
     }

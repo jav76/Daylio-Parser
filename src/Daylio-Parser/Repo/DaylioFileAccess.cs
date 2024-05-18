@@ -1,8 +1,8 @@
 ﻿using CsvHelper;
-using Daylio_Parser.Models;
+using DaylioParser.Models;
 using System.Globalization;
 
-namespace Daylio_Parser.Repo
+namespace DaylioParser.Repo
 {
     internal class DaylioFileAccess
     {
@@ -58,7 +58,6 @@ namespace Daylio_Parser.Repo
                         IEnumerable<DaylioCSVDataModel>readHeader = CSVReader.GetRecords<DaylioCSVDataModel>();
                         while (CSVReader.Read())
                         {
-                            DaylioCommon.UpsertActivity(CSVReader.GetField(ACTIVITIES_HEADER).Split(" | ")); // Split activities by delimiter " | "
                             CSVData.Add(CSVReader.GetRecord<DaylioCSVDataModel>());
                         }
                     }

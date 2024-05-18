@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.CommandLine;
 
-namespace Daylio_Parser.Shell
+namespace DaylioParser.Shell
 {
     internal class DaylioShellCommands : IEnumerable<Command>
     {

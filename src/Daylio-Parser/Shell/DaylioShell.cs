@@ -1,6 +1,6 @@
 ﻿using System.CommandLine;
 
-namespace Daylio_Parser.Shell
+namespace DaylioParser.Shell
 {
     internal static class DaylioShell
     {

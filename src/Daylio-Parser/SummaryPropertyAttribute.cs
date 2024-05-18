@@ -1,5 +1,5 @@
 ﻿
-namespace Daylio_Parser
+namespace DaylioParser
 {
     internal class SummaryPropertyAttribute : Attribute { }
 }

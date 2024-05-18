@@ -1,4 +1,4 @@
-﻿namespace Daylio_Parser
+﻿namespace DaylioParser
 {
     public static class DaylioCommon
     {
@@ -11,14 +11,5 @@
             Awful
         }
 
-        public static HashSet<string> Activities = new HashSet<string>();
-
-        public static void UpsertActivity(IEnumerable<string> activities)
-        {
-            foreach (string activity in activities)
-            {
-                Activities.Add(activity);
-            }
-        }
     }
 }
