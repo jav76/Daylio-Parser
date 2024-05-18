@@ -19,7 +19,7 @@ namespace DaylioParser
             _daylioDataRepo.CSVData?.Select(x => x.FullDate)
                 .Distinct()
                 .Count()
-            ?? 0;
+                ?? 0;
 
         [SummaryProperty]
         public int DistinctActivitiesCount =>
