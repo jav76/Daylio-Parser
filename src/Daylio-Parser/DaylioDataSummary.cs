@@ -22,7 +22,7 @@ namespace Daylio_Parser
         public static int DistinctActivities => DaylioCommon.Activities.Count();
 
         [SummaryProperty]
-        public static int TotalActivities => _CSVData?.Sum(x => x.Activities?.Split(' ').Count() ?? 0) ?? 0;
+        public static int TotalActivities => _CSVData?.Sum(x => x.Activities?.Split(' ').Length ?? 0) ?? 0;
 
         [SummaryProperty]
         public static DaylioCSVDataModel? EarliestEntry => _CSVData?.OrderBy(x => x.FullDate).First();
@@ -31,7 +31,7 @@ namespace Daylio_Parser
         public static DaylioCSVDataModel? LatestEntry => _CSVData?.OrderBy(x => x.FullDate).Last();
 
         [SummaryProperty]
-        public static int NoteTotalWordCount => _CSVData?.Sum(x => x.Note?.Split(' ').Count() ?? 0) ?? 0;
+        public static int NoteTotalWordCount => _CSVData?.Sum(x => x.Note?.Split(' ').Length ?? 0) ?? 0;
 
 
         public static void Init(IEnumerable<DaylioCSVDataModel>? daylioData)
