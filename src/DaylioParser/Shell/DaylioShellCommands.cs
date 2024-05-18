@@ -37,6 +37,7 @@ namespace DaylioParser.Shell
                 Console.WriteLine(eventArgs.Result);
             });
 
+            _rootCommand?.Add(summaryCommand);
             _commands.Add(summaryCommand);
         }
 

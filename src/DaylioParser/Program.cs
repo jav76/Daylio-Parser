@@ -25,8 +25,7 @@ namespace DaylioParser
 
             foreach (DaylioCSVDataModel line in daylioDataRepo.CSVData)
             {
-                Console.WriteLine(line.ToString());
-                Console.WriteLine(summary);
+               Console.WriteLine(line.ToString());
             }
 
             // The "Shell" will parse the input and invoke the appropriate equivalent CommandLine command.

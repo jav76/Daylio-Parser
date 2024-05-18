@@ -20,7 +20,7 @@ namespace DaylioParser.Shell
             _args = args;
             _commands = new DaylioShellCommands(args);
             _dataRepo = dataRepo;
-            _dataSummary = new DaylioDataSummary(dataRepo);
+            _dataSummary = new DaylioDataSummary(_dataRepo);
         }
 
         #region Shell Events
