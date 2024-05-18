@@ -34,9 +34,9 @@ namespace Daylio_Parser.Repo
             _filePath = filePath;
         }
 
-        public IEnumerable<CSVDataModel>? TryReadFile()
+        public IEnumerable<DaylioCSVDataModel>? TryReadFile()
         {
-            List<CSVDataModel> CSVData = new List<CSVDataModel>();
+            List<DaylioCSVDataModel> CSVData = new List<DaylioCSVDataModel>();
             CsvHelper.Configuration.IReaderConfiguration readerConfig = new CsvHelper.Configuration.CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 HasHeaderRecord = true,
@@ -55,11 +55,11 @@ namespace Daylio_Parser.Repo
                     {
                         CSVReader.Read();
                         CSVReader.ReadHeader();
-                        IEnumerable<CSVDataModel>readHeader = CSVReader.GetRecords<CSVDataModel>();
+                        IEnumerable<DaylioCSVDataModel>readHeader = CSVReader.GetRecords<DaylioCSVDataModel>();
                         while (CSVReader.Read())
                         {
                             DaylioCommon.UpsertActivity(CSVReader.GetField(ACTIVITIES_HEADER).Split(" | ")); // Split activities by delimiter " | "
-                            CSVData.Add(CSVReader.GetRecord<CSVDataModel>());
+                            CSVData.Add(CSVReader.GetRecord<DaylioCSVDataModel>());
                         }
                     }
                 }

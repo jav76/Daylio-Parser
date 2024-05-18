@@ -2,7 +2,7 @@
 
 namespace Daylio_Parser.Models
 {
-    internal class CSVDataModel
+    internal class DaylioCSVDataModel
     {
         [Index(0)]
         public DateOnly FullDate { get; set; }

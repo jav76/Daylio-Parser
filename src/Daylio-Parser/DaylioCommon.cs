@@ -1,4 +1,4 @@
-﻿namespace Daylio_Parser.Models
+﻿namespace Daylio_Parser
 {
     public static class DaylioCommon
     {

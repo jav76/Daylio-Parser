@@ -39,6 +39,7 @@ namespace Daylio_Parser.Shell
             {
                 task.Value.Cancel();
                 task.Value.Dispose();
+                task.Key.Dispose();
                 _commandListenerTasks.Remove(task.Key);
             }
         }
