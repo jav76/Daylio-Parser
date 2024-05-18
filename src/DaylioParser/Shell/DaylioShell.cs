@@ -1,47 +1,82 @@
-﻿using System.CommandLine;
+﻿using Daylio_Parser;
+using DaylioParser.Repo;
+using System.CommandLine;
 
 namespace DaylioParser.Shell
 {
     internal static class DaylioShell
     {
-        private static Dictionary<Task<int>, CancellationTokenSource> _commandListenerTasks = new Dictionary<Task<int>, CancellationTokenSource>();
+        private static KeyValuePair<Task<int>, CancellationTokenSource> _commandListenerTask = new KeyValuePair<Task<int>, CancellationTokenSource>();
         private static DaylioShellCommands? _commands;
         private static string[]? _args;
+        private static DaylioDataRepo? _dataRepo;
+        private static DaylioDataSummary? _dataSummary;
 
-        public static void Init(params string[] args)
+        public static event EventHandler<DaylioShellEventArgs<string>>? GetSummary;
+        public static DaylioShellCommands? Commands => _commands;
+
+        public static void Init(DaylioDataRepo dataRepo, params string[] args)
         {
             _args = args;
-            _commands = new DaylioShellCommands();
-            _commands.Init();
+            _commands = new DaylioShellCommands(args);
+            _dataRepo = dataRepo;
+            _dataSummary = new DaylioDataSummary(dataRepo);
+        }
+
+        #region Shell Events
+
+        private static void AddEventListeners()
+        {
+            if (_commands == null)
+            {
+                throw new InvalidOperationException("Commands have not been initialized.");
+            }
+
+            _commands.GetSummary += GetSummaryHandler;
+        }
+
+        private static void RemoveEventListeners()
+        {
+            if (_commands == null)
+            {
+                throw new InvalidOperationException("Commands have not been initialized.");
+            }
+
+            _commands.GetSummary -= GetSummaryHandler;
         }
 
         public static void StartListening()
         {
-            if (_commands == null || _args == null)
+            if (_commands == null || _args == null || _commands?.RootCommand == null)
             {
-                return;
+                throw new InvalidOperationException("Shell has not been initialized.");
             }
 
-            foreach (Command command in _commands)
-            {
-                CancellationTokenSource newCancellationToken = new CancellationTokenSource();
-                _commandListenerTasks.Add 
-                (
-                    Task.Run(() => command.InvokeAsync(_args), newCancellationToken.Token),
-                    newCancellationToken
-                );
-            }
+            CancellationTokenSource newCancellationToken = new CancellationTokenSource();
+
+            _commandListenerTask = new KeyValuePair<Task<int>, CancellationTokenSource>
+            (
+                Task.Run(() => _commands.RootCommand.InvokeAsync(_args), newCancellationToken.Token),
+                newCancellationToken
+            );
+
+            AddEventListeners();
         }
 
         public static void StopListening()
         {
-            foreach (KeyValuePair<Task<int>, CancellationTokenSource> task in _commandListenerTasks)
-            {
-                task.Value.Cancel();
-                task.Value.Dispose();
-                task.Key.Dispose();
-                _commandListenerTasks.Remove(task.Key);
-            }
+            _commandListenerTask.Value.Cancel();
+            _commandListenerTask.Value.Dispose();
+            _commandListenerTask.Key.Dispose();
+            RemoveEventListeners();
         }
+
+        public static void GetSummaryHandler(object? sender, DaylioShellEventArgs<string> e)
+        {
+            e.Result = _dataSummary?.GetSummary();
+        }
+
+        #endregion
+
     }
 }

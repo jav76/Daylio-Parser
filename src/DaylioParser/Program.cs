@@ -1,6 +1,7 @@
 ﻿using DaylioParser.Models;
 using DaylioParser.Repo;
 using DaylioParser.Shell;
+using System.CommandLine;
 
 namespace DaylioParser
 {
@@ -8,11 +9,11 @@ namespace DaylioParser
     {
         static void Main(string[] args)
         {
-            DaylioShell.Init(args);
-            DaylioShell.StartListening();
+            DaylioFileAccess daylioFileAccess = new DaylioFileAccess(@"C:\Users\jav26\git\Daylio-Parser\daylio_export_2024_05_16.csv");
+            DaylioDataRepo daylioDataRepo = new DaylioDataRepo(daylioFileAccess);
 
-            DaylioFileAccess fileAccess = new DaylioFileAccess(@"C:\Users\jav26\git\Daylio-Parser\daylio_export_2024_05_16.csv");
-            DaylioDataRepo daylioDataRepo = new DaylioDataRepo(fileAccess);
+            DaylioShell.Init(daylioDataRepo, args);
+            DaylioShell.StartListening();
 
             DaylioDataSummary dataSummary = new DaylioDataSummary(daylioDataRepo);
             string summary = dataSummary.GetSummary();
@@ -26,6 +27,26 @@ namespace DaylioParser
             {
                 Console.WriteLine(line.ToString());
                 Console.WriteLine(summary);
+            }
+
+            // The "Shell" will parse the input and invoke the appropriate equivalent CommandLine command.
+            while (true)
+            {
+                string? input = Console.ReadLine()?.TrimEnd();
+
+                if (!string.IsNullOrWhiteSpace(input))
+                {
+                    string commandName = input.Split(' ')[0];
+                    string[]? commandArgs = input.Substring(commandName.Length).Split(' ');
+                    Command command = DaylioShell.Commands.Where(command => command.Name == commandName).Distinct().FirstOrDefault();
+                    command?.InvokeAsync
+                        (
+                            commandArgs.Count() > 1
+                            ? commandArgs
+                            : Array.Empty<string>()
+                        );
+                }
+
             }
         }
     }
