@@ -12,9 +12,6 @@ namespace DaylioParser.Shell
         private static DaylioDataSummary? _dataSummary;
         private static string _fileLocation = string.Empty;
 
-        public static event EventHandler<DaylioShellEventArgs<string>>? GetSummary;
-        public static event EventHandler<DaylioShellEventArgs<int, object>>? SetDaylioFilePath;
-
         public static DaylioShellCommands? Commands => _commands;
 
         public static string FileLocation
@@ -31,33 +28,9 @@ namespace DaylioParser.Shell
         public static void Init(DaylioDataRepo dataRepo, params string[] args)
         {
             _args = args;
-            _commands = new DaylioShellCommands(args);
+            _commands = new DaylioShellCommands();
             _dataRepo = dataRepo;
             _dataSummary = new DaylioDataSummary(_dataRepo);
-        }
-
-        #region Shell Events
-
-        private static void AddEventListeners()
-        {
-            if (_commands == null)
-            {
-                throw new InvalidOperationException("Commands have not been initialized.");
-            }
-
-            _commands.GetSummary += GetSummaryHandler;
-            _commands.SetDaylioFilePath += SetDaylioFilePathHandler;
-        }
-
-        private static void RemoveEventListeners()
-        {
-            if (_commands == null)
-            {
-                throw new InvalidOperationException("Commands have not been initialized.");
-            }
-
-            _commands.GetSummary -= GetSummaryHandler;
-            _commands.SetDaylioFilePath -= SetDaylioFilePathHandler;
         }
 
         public static void StartListening()
@@ -74,8 +47,6 @@ namespace DaylioParser.Shell
                 Task.Run(() => _commands.RootCommand.InvokeAsync(_args), newCancellationToken.Token),
                 newCancellationToken
             );
-
-            AddEventListeners();
         }
 
         public static void StopListening()
@@ -83,35 +54,25 @@ namespace DaylioParser.Shell
             _commandListenerTask.Value.Cancel();
             _commandListenerTask.Value.Dispose();
             _commandListenerTask.Key.Dispose();
-            RemoveEventListeners();
         }
 
-        public static void GetSummaryHandler(object? sender, DaylioShellEventArgs<string> e)
+        public static string? GetSummary()
         {
-            e.Result = _dataSummary?.GetSummary();
+            return _dataSummary?.GetSummary();
         }
 
-        public static void SetDaylioFilePathHandler(object? sender, DaylioShellEventArgs<int, string> e)
+        public static void SetDaylioFilePath(string filePath)
         {
-            if (e.Args.Length != 1)
-            {
-                e.Result = -1;
-                return;
-            }
-
-            string? newFileLocation = Path.GetFullPath(e.Args[0].ToString().Replace("\"", ""));
+            string? newFileLocation = Path.GetFullPath(filePath.Replace("\"", ""));
 
             if (string.IsNullOrWhiteSpace(newFileLocation))
             {
-                e.Result = -1;
-                return;
+                throw new ArgumentException("File path cannot be null or empty.");
             }
 
             FileLocation = newFileLocation;
-            e.Result = 0;
-        }
 
-        #endregion
+        }
 
     }
 }

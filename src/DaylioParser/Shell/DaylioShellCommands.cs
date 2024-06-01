@@ -6,18 +6,14 @@ namespace DaylioParser.Shell
 {
     internal class DaylioShellCommands : IEnumerable<Command>
     {
-        private string[]? _args;
         private RootCommand? _rootCommand;
         private List<Command> _commands = new List<Command>();
 
         public IEnumerable<Command> Commands => _commands;
-        public event EventHandler<DaylioShellEventArgs<string>>? GetSummary;
-        public event EventHandler<DaylioShellEventArgs<int, string>>? SetDaylioFilePath;
         public RootCommand? RootCommand => _rootCommand;
 
-        public DaylioShellCommands(params string[] args)
+        public DaylioShellCommands()
         {
-            _args = args;
             BuildCommands();
         }
 
@@ -34,15 +30,10 @@ namespace DaylioParser.Shell
             fileOption.IsRequired = true;
             summaryCommand.AddOption(fileOption);
 
-            DaylioShellEventArgs<string> summaryEventArgs = new DaylioShellEventArgs<string>();
-            DaylioShellEventArgs<int, string> setFileEventArgs;
-
             summaryCommand.Handler = CommandHandler.Create<string>((file) =>
             {
-                setFileEventArgs = new DaylioShellEventArgs<int, string>(new string[] { file });
-                SetDaylioFilePath?.Invoke(this, setFileEventArgs);
-                GetSummary?.Invoke(this, summaryEventArgs);
-                Console.WriteLine(summaryEventArgs.Result);
+                DaylioShell.SetDaylioFilePath(file);
+                Console.WriteLine(DaylioShell.GetSummary());
             });
 
             _rootCommand?.Add(summaryCommand);
