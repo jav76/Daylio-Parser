@@ -9,7 +9,7 @@ namespace DaylioParser
     {
         static void Main(string[] args)
         {
-            DaylioFileAccess daylioFileAccess = new DaylioFileAccess(@"C:\Users\jav26\git\Daylio-Parser\daylio_export_2024_05_16.csv");
+            DaylioFileAccess daylioFileAccess = new DaylioFileAccess(@"C:\Users\jav26\git\Daylio-Parser\daylio_export_2024_05_22.csv");
             DaylioDataRepo daylioDataRepo = new DaylioDataRepo(daylioFileAccess);
 
             DaylioShell.Init(daylioDataRepo, args);
@@ -36,8 +36,14 @@ namespace DaylioParser
                 if (!string.IsNullOrWhiteSpace(input))
                 {
                     string commandName = input.Split(' ')[0];
-                    string[]? commandArgs = input.Substring(commandName.Length).Split(' ').Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
-                    Command command = DaylioShell.Commands.Where(command => command.Name == commandName).Distinct().FirstOrDefault();
+                    string[]? commandArgs = input.Substring(commandName.Length).Split(' ')
+                        .Where(x => !string.IsNullOrWhiteSpace(x))
+                        .ToArray();
+
+                    Command command = DaylioShell.Commands.Where(command => command.Name == commandName)
+                        .Distinct()
+                        .FirstOrDefault();
+
                     command?.InvokeAsync
                         (
                             commandArgs.Count() > 1

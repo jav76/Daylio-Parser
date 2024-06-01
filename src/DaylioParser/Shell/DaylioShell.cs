@@ -99,7 +99,7 @@ namespace DaylioParser.Shell
                 return;
             }
 
-            string? newFileLocation = e.Args[0].ToString();
+            string? newFileLocation = Path.GetFullPath(e.Args[0].ToString().Replace("\"", ""));
 
             if (string.IsNullOrWhiteSpace(newFileLocation))
             {
