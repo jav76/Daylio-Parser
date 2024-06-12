@@ -1,4 +1,5 @@
-﻿using DaylioParser.Repo;
+﻿using DaylioData.Models;
+using DaylioParser.Repo;
 using System.CommandLine;
 
 namespace DaylioParser.Shell
