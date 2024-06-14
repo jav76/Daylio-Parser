@@ -38,7 +38,7 @@ namespace DaylioParser
                         .Where(x => !string.IsNullOrWhiteSpace(x))
                         .ToArray();
 
-                    Command command = DaylioShell.Commands.Where(command => command.Name == commandName)
+                    Command? command = DaylioShell.Commands?.Where(command => command.Name == commandName)
                         .Distinct()
                         .FirstOrDefault();
 
