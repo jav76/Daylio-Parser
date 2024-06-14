@@ -1,5 +1,4 @@
 ﻿using DaylioData.Models;
-using DaylioParser.Models;
 using DaylioParser.Shell;
 using System.CommandLine;
 
@@ -9,7 +8,7 @@ namespace DaylioParser
     {
         static void Main(string[] args)
         {
-            DaylioData.DaylioData daylioData = new DaylioData.DaylioData(@"C:\Users\jav26\git\Daylio-Parser\daylio_export_2024_05_22.csv");
+            DaylioData.DaylioData daylioData = new DaylioData.DaylioData(@"C:\Users\jav26\git\Daylio-Parser\daylio_export_2024_06_14.csv");
 
             DaylioShell.Init(daylioData.DataRepo, args);
             DaylioShell.StartListening();

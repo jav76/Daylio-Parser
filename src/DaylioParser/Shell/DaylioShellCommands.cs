@@ -27,12 +27,15 @@ namespace DaylioParser.Shell
         {
             Command summaryCommand = new Command("summary", "Get a summary of Daylio data.");
             Option fileOption = new Option<string>("--file", "File path of a Daylio CSV file.");
-            fileOption.IsRequired = true;
+            fileOption.IsRequired = false;
             summaryCommand.AddOption(fileOption);
 
             summaryCommand.Handler = CommandHandler.Create<string>((file) =>
             {
-                DaylioShell.SetDaylioFilePath(file);
+                if (!string.IsNullOrWhiteSpace(file))
+                {
+                    DaylioShell.SetDaylioFilePath(file);
+                }
                 Console.WriteLine(DaylioShell.GetSummary());
             });
 

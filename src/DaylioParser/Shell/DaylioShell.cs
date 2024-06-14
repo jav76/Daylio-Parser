@@ -1,5 +1,5 @@
 ﻿using DaylioData.Models;
-using DaylioParser.Repo;
+using DaylioData.Repo;
 using System.CommandLine;
 
 namespace DaylioParser.Shell
@@ -20,9 +20,11 @@ namespace DaylioParser.Shell
             get => _fileLocation;
             set
             {
-                _fileLocation = value;
-                _dataRepo = new DaylioDataRepo(new DaylioFileAccess(_fileLocation));
-                _dataSummary = new DaylioDataSummary(_dataRepo);
+                throw new NotImplementedException("To be implemented in DaylioData 0.1.4.");
+
+                //_fileLocation = value;
+                //_dataRepo.UpdateFile(_fileLocation);
+                //_dataSummary = new DaylioDataSummary(_dataRepo);
             }
         }
 
