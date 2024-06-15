@@ -22,18 +22,19 @@ namespace DaylioParser.Shell
             {
                 throw new NotImplementedException("To be implemented in DaylioData 0.1.4.");
 
-                //_fileLocation = value;
-                //_dataRepo.UpdateFile(_fileLocation);
-                //_dataSummary = new DaylioDataSummary(_dataRepo);
+                DaylioData.DaylioData daylioData = new DaylioData.DaylioData(_fileLocation);
+                DaylioShell.Init(daylioData.DataRepo, _args);
             }
         }
 
-        public static void Init(DaylioDataRepo dataRepo, params string[] args)
+        public static void Init(DaylioDataRepo? dataRepo, params string[]? args)
         {
             _args = args;
             _commands = new DaylioShellCommands();
             _dataRepo = dataRepo;
-            _dataSummary = new DaylioDataSummary(_dataRepo);
+            _dataSummary = (dataRepo == null)
+                ? null 
+                : new DaylioDataSummary(dataRepo);
         }
 
         public static void StartListening()

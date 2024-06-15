@@ -1,7 +1,8 @@
 {
   "profiles": {
     "DaylioParser": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "summary --file \"C:\\Users\\jav26\\git\\Daylio-Parser\\daylio_export_2024_06_14.csv\""
     }
   }
 }
