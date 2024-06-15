@@ -1,7 +1,7 @@
 # Daylio-Parser
 
 
-Daylio-Parser is a CLI for accessing [DaylioData](https://www.nuget.org/packages/DaylioData).
+Daylio-Parser is a CLI for accessing [DaylioData](https://github.com/jav76/DaylioData).
 
 ## Usage
 
