@@ -11,11 +11,7 @@ The executable can be started with command line arguments which will be parsed a
 
 #### Summary
 
-The `summary` command gives a summary string of concatenated DaylioData summary properties with
-
-```csharp
-[SummaryPropertyAttribute]
-```
+The `summary` command gives a summary string of concatenated DaylioData summary properties with `[SummaryPropertyAttribute]`
 
 ```summary --file <path_to_daylio_export.csv>```
 
