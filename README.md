@@ -13,6 +13,8 @@ The executable can be started with command line arguments which will be parsed a
 
 The `summary` command gives a summary string of concatenated DaylioData summary properties with `[SummaryPropertyAttribute]`
 
+Example:
+
 ```summary --file <path_to_daylio_export.csv>```
 
 Required Arguments:
