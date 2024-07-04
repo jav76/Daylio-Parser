@@ -20,10 +20,12 @@ namespace DaylioParser.Shell
             get => _fileLocation;
             set
             {
-                throw new NotImplementedException("To be implemented in DaylioData 0.1.4.");
-
-                DaylioData.DaylioData daylioData = new DaylioData.DaylioData(_fileLocation);
-                DaylioShell.Init(daylioData.DataRepo, _args);
+                if (value != _fileLocation)
+                {
+                    _fileLocation = value;
+                    DaylioData.DaylioData daylioData = new DaylioData.DaylioData(_fileLocation);
+                    Init(daylioData.DataRepo, _args);
+                }
             }
         }
 
